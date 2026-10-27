@@ -1,37 +1,68 @@
 import db from "../config/database.js";
 
-export class ProductRepository{
+export class InventoryRepository{
     constructor(database=db) {
         this.db = database;
     }
 
-    findById(id) {
+    getStock(productId) {
         return this.db.prepare(`
-            SELECT
-                p.*,
-                c.name AS category_name
-            FROM products AS p
-            LEFT JOIN categories AS c
-                ON c.id = p.category_id
-            WHERE p.id = ?     
-        `).get() ?? null;
+            SELECT id, sku, name, stock_quantity, is_active FROM products WHERE id = ?
+        `).get(productId) ?? null;
     }
 
-    findAll() {
-        return this.db.prepare(`
-            SELECT 
-                p.*,
-                c.name AS category_name
-            FROM products AS p
-            LEFT JOIN categories AS c
-                ON c.id = category_id
-            ORDER BY p.name ASC
-        `).all();
+    changesStockQuantity(product_id, quantityChange) {
+        const result = this.db.prepare(`
+            UPDATE products SET stock_quantity = stock_quantity + @quantityChange,
+            updated_at = datetime('now')
+            WHERE id = @productId AND stock_quantity + @quantityChange >= 0
+        `).run(product_id, quantityChange);
+
+        return result.changes > 0;
     }
 
-    findBySku(sku) {
+    createMovement({productId, movementType, quantityChange, reason=null}) {
+        const result = this.db.prepare(`
+            INSERT INTO inventory_movements (
+                product_id, 
+                movement_type,
+                quantity_change,
+                reason
+            )
+            VALUES (@productId, @movementType, @quantity_change, @reason)    
+        `).run({productId, movementType, quantityChange, reason});
+
+        return this.findMovementById(Number(result.lastInsertRowid))
+    }
+
+    findMovementById(id) {
         return this.db.prepare(`
-            SELECT * FROM products WHERE sku = ?
-        `).get(sku) ?? null;
+            SELECT * FROM inventory_movements WHERE id = ?
+        `).get(id) ?? null;
+    }
+
+    findMovementsByProduct(productId, { limit = 50, offset = 0} = {}) {
+        return this.db.prepare(`
+            SELECT * FROM inventory_movements WHERE product_id = ?
+            ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?    
+        `).all(productId, limit, offset);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
