@@ -26,7 +26,7 @@ const schemaPath = path.join(
     "schema.sql"
 );
 
-fs.mkdir(databaseDirectory, { recursive: true });
+fs.mkdirSync(databaseDirectory, { recursive: true });
 
 const db = new Database(databasePath);
 

@@ -42,13 +42,13 @@ CREATE TABLE IF NOT EXISTS inventory_movements (
 
     movement_type TEXT NOT NULL
         CHECK (
-            movement_type IN ("stock_in", "stock_out", "adjustment")
+            movement_type IN ('stock_in', 'stock_out', 'adjustment')
         ),
 
     -- Positive means it increase, Negative means it decrease
     quantity_change INTEGER NOT NULL
         CHECK (
-            (movement_type = 'stock in' AND quantity_change > 0)
+            (movement_type = 'stock_in' AND quantity_change > 0)
             OR
             (movement_type = 'stock_out' AND quantity_change < 0)
             OR
@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS inventory_movements (
         ),
 
     reason TEXT,
-    created_at TEXT NOT NULL DEFAULT (datetime("now")),
+    created_at TEXT NOT NULL DEFAULT (datetime('now')),
 
 
     FOREIGN KEY (product_id)
