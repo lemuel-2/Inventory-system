@@ -1,6 +1,6 @@
-import { ProductRepository } from "../repositories/product.repository";
-import { CategoryRepository } from "../repositories/category.repository";
-import { AppError } from "../utils/app-error";
+import { ProductRepository } from "../repositories/product.repository.js";
+import { CategoryRepository } from "../repositories/category.repository.js";
+import { AppError } from "../utils/app-error.js";
 
 export class ProductService {
     constructor({

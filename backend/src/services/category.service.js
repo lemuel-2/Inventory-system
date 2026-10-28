@@ -1,5 +1,5 @@
-import { CategoryRepository } from "../repositories/category.repository";
-import { AppError } from "../utils/app-error";
+import { CategoryRepository } from "../repositories/category.repository.js";
+import { AppError } from "../utils/app-error.js";
 
 
 export class CategoryService {
