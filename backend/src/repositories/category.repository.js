@@ -26,6 +26,12 @@ export class CategoryRepository {
         `).get(name) ?? null;
     }
 
+    findById(id) {
+        return this.db.prepare(`
+            SELECT * FROM categories WHERE id = ?    
+        `).get(id) ?? null;
+    }
+
     update(id, changes) {
         const allowedField = new Set(['name', 'description']);
         const entries = Object.entries(changes)
