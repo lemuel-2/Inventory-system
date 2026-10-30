@@ -9,13 +9,13 @@ export class CategoryService {
 
     #validateId(id) {
         if (!Number.isSafeInteger(id) || id <= 0) {
-            throw new Error("Category ID must be a positive integer.", 400)
+            throw new AppError("Category ID must be a positive integer.", 400)
         }
     }
 
     #validateName(name) {
         if (typeof name !== "string" || name.trim() === "") {
-            throw new AppError("Category name is required");
+            throw new AppError("Category name is required", 400);
         }
 
         return name.trim();
@@ -50,7 +50,7 @@ export class CategoryService {
         const description = this.#validateDescription(input.description ?? null);
 
         if (this.categoryRepository.findByName(name)) {
-            throw new Error(`Name already exists.`, 409);
+            throw new AppError(`Name already exists.`, 409);
         }
 
         return this.categoryRepository.create({name, description});
@@ -66,10 +66,10 @@ export class CategoryService {
         const fieldAllowed = new Set(['name', 'description']);
 
         const entries = Object.entries(changes)
-            .filter(([, value]) => value = undefined);
+            .filter(([, value]) => value !== undefined);
 
         for (const [field] of entries) {
-            if (!allowedFields.has(field)) {
+            if (!fieldAllowed.has(field)) {
                 throw new AppError(`Cannot update category field: ${field}`, 400);
             }
         }
@@ -81,7 +81,7 @@ export class CategoryService {
             normalized.name = this.#validateName(normalized.name)
             const duplicate = this.categoryRepository.findByName(normalized.name);
 
-            if (!duplicate || duplicate.id !== id) {
+            if (duplicate && duplicate.id !== id) {
                 throw new AppError("Category name already exists", 409);
             }
         }

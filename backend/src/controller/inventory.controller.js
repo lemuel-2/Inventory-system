@@ -1,4 +1,4 @@
-import { BaseController } from "./base.controller";
+import { BaseController } from "./base.controller.js";
 import { InventoryService} from "../services/inventory.service.js"
 
 export class InventoryController extends BaseController {
@@ -26,35 +26,38 @@ export class InventoryController extends BaseController {
         return this.execute(
             res, next, 200, () => this.inventoryService.stockIn(
                 this.parseId(req.params.productId, "Product ID"),
-                res.body?.quantity,
-                res.body?.reason ?? null
+                req.body?.quantity,
+                req.body?.reason ?? null
             )
         );
     }
 
-    stockOut() {
+    stockOut(req, res, next) {
         return this.execute(
             res, next, 200, () => this.inventoryService.stockOut(
                 this.parseId(req.params.productId, "Product Id"),
-                res.body?.quantity,
-                res.body?.reason ?? null
+                req.body?.quantity,
+                req.body?.reason ?? null
             )
         );
     }
 
     adjustStock(req, res, next) {
-        res, next, 200, () => this.inventoryService.adjustStock(
-            this.parseId(req.params.productId, "Product ID"),
-            res.body?.quantityChange,
-            req.body?.reason ?? null
+        return this.execute(
+            res, next, 200, () => this.inventoryService.adjustStock(
+                this.parseId(req.params.productId, "Product ID"),
+                req.body?.quantityChange,
+                req.body?.reason ?? null
+            )
         );
     }
 
     getMovementHistory(req, res, next) {
-        res, next, 200, () => {
+        return this.execute(
+            res, next, 200, () => {
             const productId = this.parseId(req.params.productId, "Product ID")
             const limit = this.parseQueryInteger(
-                req.params.limit, {
+                req.query.limit, {
                     field: "limit",
                     defaultValue: 50,
                     min: 1,
@@ -63,7 +66,7 @@ export class InventoryController extends BaseController {
             );
 
             const offset = this.parseQueryInteger(
-                req.params.offset, {
+                req.query.offset, {
                     field: "offset",
                     defaultValue: 0,
                     min: 0
@@ -71,7 +74,8 @@ export class InventoryController extends BaseController {
             )
 
             return this.inventoryService.getMovementHistory(productId, {limit, offset});
-        }
+            }
+        );
     }
 
 

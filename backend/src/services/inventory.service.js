@@ -33,7 +33,7 @@ export class InventoryService {
 
         return this.#applyMovement(
             productId,
-            'stockIn',
+            'stock_in',
             quantity,
             reason,
         );
@@ -44,15 +44,15 @@ export class InventoryService {
 
         return this.#applyMovement(
             productId,
-            "stockOut",
-            quantity,
+            "stock_out",
+            -quantity,
             reason,
         );
     }
 
     adjustStock(productId, quantityChange, reason = null) {
         if (!Number.isSafeInteger(quantityChange) || quantityChange === 0) {
-            throw new AppError("Stock adjustment must be non-zero integer");
+            throw new AppError("Stock adjustment must be non-zero integer", 400);
         }
 
         return this.#applyMovement(
@@ -82,7 +82,7 @@ export class InventoryService {
         }
 
         if(!Number.isSafeInteger(offset) || offset < 0) {
-            throw new AppError("Offset must be a non_negative integer");
+            throw new AppError("Offset must be a non_negative integer", 400);
         }
 
         this.getStock(productId);
@@ -104,7 +104,7 @@ export class InventoryService {
             
             const changed = this.inventoryRepository.changeStockQuantity(productId, quantityChange);
             if(!changed) {
-                throw new AppError("Insufficient stock for this operation");
+                throw new AppError("Insufficient stock for this operation", 409);
             }
     
             const movement = this.inventoryRepository.createMovement({

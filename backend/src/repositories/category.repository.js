@@ -37,7 +37,7 @@ export class CategoryRepository {
         const entries = Object.entries(changes)
             .filter(([, value]) => value !== undefined);
 
-        const invalidField = entries.find(([name]) => !allowedField.has(field));
+        const invalidField = entries.find(([name]) => !allowedField.has(name));
 
         if (invalidField) {
             throw new TypeError(`Cannot update category field: ${invalidField[0]}`)
@@ -59,7 +59,7 @@ export class CategoryRepository {
     }
 
     deleteById(id) {
-        const result = this.id.prepare(`
+        const result = this.db.prepare(`
             DELETE FROM categories WHERE id  = ?    
         `).run(id);
 

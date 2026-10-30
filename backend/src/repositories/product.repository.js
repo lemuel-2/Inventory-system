@@ -32,7 +32,7 @@ export class ProductRepository{
             category_id: product.category_id,
             price_cents: product.price_cents,
             reorder_level: product.reorder_level,
-            unit: product.reorder_level
+            unit: product.unit
         });
 
         return this.findById(Number(result.lastInsertRowid));
@@ -71,7 +71,7 @@ export class ProductRepository{
         });
 
 
-        this.id.prepare(`
+        this.db.prepare(`
             UPDATE products SET ${assignments.join(', ')}, 
             updated_at = datetime('now') WHERE id = @id
         `).run(params);

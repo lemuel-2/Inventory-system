@@ -9,7 +9,7 @@ export class ApiRoutes {
         productRoutes = new ProductRoutes(),
         categoryRoutes = new CategoryRoutes(),
         inventoryRoutes = new InventoryRoutes()
-    }) {
+    } = {}) {
         this.router = Router();
         this.productRoutes = productRoutes;
         this.categoryRoutes = categoryRoutes;

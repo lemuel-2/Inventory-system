@@ -1,9 +1,9 @@
 import "dotenv/config";
 import express from "express";
 
-import { ApiRoutes } from "./src/routes/api.route";
+import { ApiRoutes } from "./src/routes/api.route.js";
 import { ErrorMiddleware } from "./src/middleware/error.middleware.js";
-import { AppError } from "./src/utils/app-error";
+import { AppError } from "./src/utils/app-error.js";
 
 class Server {
     constructor() {

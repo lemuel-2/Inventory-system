@@ -1,4 +1,4 @@
-import { BaseController } from "./base.controller";
+import { BaseController } from "./base.controller.js";
 import { CategoryService } from "../services/category.service.js"
 
 export class CategoryController extends BaseController {
@@ -21,7 +21,9 @@ export class CategoryController extends BaseController {
 
     getById(req, res, next) {
         return this.execute(
-            res, next, 200, () => this.categoryService.getById(req.params.id, "Category ID")
+            res, next, 200, () => this.categoryService.getById(
+                this.parseId(req.params.id, "Category ID")
+            )
         );
     }
 
@@ -40,8 +42,10 @@ export class CategoryController extends BaseController {
     }
 
     delete(req, res, next) {
-        res, next, 200, () => this.categoryService.delete(
-            this.parseId(req.params.id), "Category ID"
+        return this.execute(
+            res, next, 200, () => this.categoryService.delete(
+                this.parseId(req.params.id, "Category ID")
+            )
         );
     }
 }

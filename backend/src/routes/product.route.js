@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { ProductController } from "../controller/product.controller";
+import { ProductController } from "../controller/product.controller.js";
 
 export class ProductRoutes {
-    constructor({ controller = new ProductController } = {}) {
+    constructor({ controller = new ProductController() } = {}) {
         this.router = Router();
-        this. controller = controller;
+        this.controller = controller;
         this.registerRoutes();
     }
 
@@ -12,6 +12,7 @@ export class ProductRoutes {
         this.router.get("/", this.controller.list);
         this.router.get("/:id", this.controller.getById);
         this.router.post("/", this.controller.create);
+        this.router.patch("/:id", this.controller.update);
         this.router.patch("/:id/deactivate", this.controller.deactivate);
     }
 

@@ -11,12 +11,12 @@ export class InventoryRepository{
         `).get(productId) ?? null;
     }
 
-    changesStockQuantity(product_id, quantityChange) {
+    changeStockQuantity(productId, quantityChange) {
         const result = this.db.prepare(`
             UPDATE products SET stock_quantity = stock_quantity + @quantityChange,
             updated_at = datetime('now')
             WHERE id = @productId AND stock_quantity + @quantityChange >= 0
-        `).run(product_id, quantityChange);
+        `).run({ productId, quantityChange });
 
         return result.changes > 0;
     }
@@ -29,7 +29,7 @@ export class InventoryRepository{
                 quantity_change,
                 reason
             )
-            VALUES (@productId, @movementType, @quantity_change, @reason)    
+            VALUES (@productId, @movementType, @quantityChange, @reason)    
         `).run({productId, movementType, quantityChange, reason});
 
         return this.findMovementById(Number(result.lastInsertRowid))

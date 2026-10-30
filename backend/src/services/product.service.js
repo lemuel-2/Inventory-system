@@ -11,7 +11,7 @@ export class ProductService {
         this.categoryRepository = categoryRepository;
     }
 
-    #validateId() {
+    #validateId(id) {
         if (!Number.isSafeInteger(id) || id <= 0) {
             throw new AppError('Product ID must be a positive integer.', 400)
         };
@@ -25,7 +25,7 @@ export class ProductService {
     }
 
     #validateNonNegativeInteger(value, field) {
-        if (!Number.isSafeInteger(value) || value <= 0) {
+        if (!Number.isSafeInteger(value) || value < 0) {
             throw new AppError(`${field} must be a non-negative integer.`, 400)
         };
     }
@@ -39,7 +39,7 @@ export class ProductService {
         }
 
         if (!this.categoryRepository.findById(categoryId)) {
-            throw new Error(`Category not found`, 404);
+            throw new AppError(`Category not found`, 404);
         }
     }
 
@@ -63,7 +63,7 @@ export class ProductService {
 
         const sku = this.#requiredText(input.sku, "SKU");
         const name = this.#requiredText(input.name, "Name");
-        const unit = this.unit === undefined 
+        const unit = input.unit === undefined 
             ? "pcs" 
             : this.#requiredText(input.unit, "Unit");
 
@@ -144,13 +144,15 @@ export class ProductService {
         }
 
         if ('description' in normalized) {
-            normalized.unit = this.#requiredText(normalized.description, "Description")
-
-            if (description !== null && typeof description !== "string") {
+            if (normalized.description !== null && typeof normalized.description !== "string") {
                 throw new AppError("Description must be text or null", 400);
             }
 
-            normalized.description = description?.trim() || null;
+            normalized.description = normalized.description?.trim() || null;
+        }
+
+        if ("price_cents" in normalized) {
+            this.#validateNonNegativeInteger(normalized.price_cents, "price in cents");
         }
 
         if ("reorder_level" in normalized) {

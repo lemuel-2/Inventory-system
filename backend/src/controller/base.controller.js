@@ -1,7 +1,7 @@
-import { AppError } from "../utils/app-error";
+import { AppError } from "../utils/app-error.js";
 
 export class BaseController{
-    execute(res, req, statusCode, operation) {
+    execute(res, next, statusCode, operation) {
         try {
             const data = operation();
 
@@ -17,7 +17,7 @@ export class BaseController{
         if (value === undefined ||
             value === null || 
             String(value).trim() === "" ||
-            !Number.isSafeInteger(value) ||
+            !Number.isSafeInteger(id) ||
             id <= 0
         
         ) {
@@ -35,7 +35,7 @@ export class BaseController{
         const number = Number(value);
 
         if (String(value).trim() === "" ||
-            !Number.isSafeInteger(value) ||
+            !Number.isSafeInteger(number) ||
             number < min ||
             number > max
         ) {

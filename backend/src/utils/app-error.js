@@ -1,5 +1,5 @@
 export class AppError extends Error{
-    constructor(message, statuscode = 500) {
+    constructor(message, statusCode = 500) {
         super(message);
 
         this.name = this.constructor.name;

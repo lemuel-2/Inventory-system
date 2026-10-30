@@ -1,5 +1,5 @@
-import { BaseController } from "./base.controller";
-import { ProductService } from "../services/product.service";
+import { BaseController } from "./base.controller.js";
+import { ProductService } from "../services/product.service.js";
 
 export class ProductController extends BaseController {
     constructor({productService = new ProductService()} = {}) {
@@ -21,7 +21,9 @@ export class ProductController extends BaseController {
 
     getById(req, res, next) {
         return this.execute(
-            res, next, 200, () => this.productService.getById(req.params.id, "Product ID")
+            res, next, 200, () => this.productService.getById(
+                this.parseId(req.params.id, "Product ID")
+            )
         );
     }
 
@@ -33,13 +35,13 @@ export class ProductController extends BaseController {
 
     update(req, res, next) {
         return this.execute(
-            res, next, 200, () => this.productServices.update(
-                this.parseId(res.params.id, "Product ID"), req.body
+            res, next, 200, () => this.productService.update(
+                this.parseId(req.params.id, "Product ID"), req.body
             ) 
-        )
+        );
     }
 
-    deactivate() {
+    deactivate(req, res, next) {
         return this.execute(
             res, next, 200, () => this.productService.deactivate(
                 this.parseId(req.params.id, "Product ID")
