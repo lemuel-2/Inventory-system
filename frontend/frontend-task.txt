@@ -1,0 +1,5 @@
+Dashboard – display inventory summaries.
+Products – list, add, edit, and deactivate products.
+Categories – manage product categories.
+Inventory – stock-in, stock-out, and stock adjustments.
+Movement history – display inventory transactions.
