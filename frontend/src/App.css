@@ -185,3 +185,50 @@ body {
   cursor: pointer;
 }
 
+
+.inventory-page {
+  padding: 20px 0;
+}
+
+.inventory-table-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+.inventory-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.inventory-table-container th,
+.inventory-table-container td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.inventory-table-container th {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.inventory-table-container td {
+  font-size: 14px;
+}
+
+.inventory-table-container button {
+  padding: 7px 10px;
+  margin-right: 5px;
+  border: 1px solid #cbd5e1;
+  background: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.inventory-table-container button:hover {
+  background: #f1f5f9;
+}
+
