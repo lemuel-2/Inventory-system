@@ -232,3 +232,107 @@ body {
   background: #f1f5f9;
 }
 
+
+.movement-page {
+  padding: 20px 0;
+}
+
+.movement-table-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+.movement-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.movement-table-container th,
+.movement-table-container td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.movement-table-container th {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.movement-table-container td {
+  font-size: 14px;
+}
+
+
+/* Main application layout */
+.main-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  background: #0f172a;
+  color: white;
+  padding: 25px 15px;
+}
+
+.sidebar-title {
+  font-size: 20px;
+  margin-bottom: 35px;
+  padding: 0 10px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 12px 15px;
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  background: #1e293b;
+  color: white;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Header */
+.header {
+  background: white;
+  padding: 20px 30px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header h2 {
+  margin: 0 0 5px;
+}
+
+.header p {
+  margin: 0;
+  color: #64748b;
+}
+
+/* Page area */
+.page-content {
+  padding: 25px 30px;
+}
+
