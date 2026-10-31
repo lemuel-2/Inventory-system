@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 
-function Header() {
+function Header({ onMenuClick }) {
     const location = useLocation();
 
     const pageTitles = {
@@ -15,6 +15,16 @@ function Header() {
 
     return (
         <header className="header">
+            <div>
+                <button 
+                    className="menu-button"
+                    onClick={onMenuClick}
+                    aria-label="Open navigation menu"
+                >
+                    ☰
+                </button>
+            </div>
+
             <h2>{currentPage}</h2>
             <p>Inventory Management System</p>
         </header>

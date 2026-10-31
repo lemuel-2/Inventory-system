@@ -1,33 +1,28 @@
+import { useEffect, useState } from "react";
+import api from "../services/api";
+
 function Products() {
-    const products = [
-    {
-      id: 1,
-      name: "Creamy White Coffee",
-      sku: "COF-001",
-      category: "Beverages",
-      price: 150,
-      stock: 25,
-      status: "Active",
-    },
-    {
-      id: 2,
-      name: "Roasted Chicken",
-      sku: "FOO-001",
-      category: "Food",
-      price: 250,
-      stock: 5,
-      status: "Active",
-    },
-    {
-      id: 3,
-      name: "Banana Chips",
-      sku: "SNK-001",
-      category: "Snacks",
-      price: 80,
-      stock: 0,
-      status: "Inactive",
-    },
-  ];
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        async function loadProducts() {
+            try {
+                const data = await api.get("/products");
+                setProducts(data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadProducts();
+    }, []);
+
+    if (loading) return <p>Loading products...</p>
+    if (error) return <p className="error-message">Error: {error}</p>
 
   return (
     <div className="products-page">
@@ -45,30 +40,33 @@ function Products() {
                 <table>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Product</th>
                             <th>SKU</th>
                             <th>Category</th>
                             <th>Price</th>
                             <th>Stock</th>
                             <th>Status</th>
-                            <th>Action</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {products.map((product) => (
+                        {products.length === 0 ? (
+                            <tr>
+                                <td colSpan="7">No products found.</td>
+                            </tr>
+                        ) : (
+                        products.map((product) => (
                             <tr key={product.id}>
+                                <th>{product.id}</th>
                                 <th>{product.name}</th>
                                 <th>{product.sku}</th>
-                                <th>{product.category}</th>
-                                <th>{product.price.toFixed(2)}</th>
-                                <th>{product.stock}</th>
-                                <th>{product.status}</th>
-                                <th>
-                                    <button>Edit</button>
-                                    <button>Deactivate</button>
-                                </th>
+                                <th>{product.category_name || "Uncategorized"}</th>
+                                <th>{(product.price_cents / 100).toFixed(2)}</th>
+                                <th>{product.stock_quantity}</th>
+                                <th>{product.is_active? "Active" : "Inactive"}</th>
                             </tr>
+                            )
                         ))}
                     </tbody>
                 </table>

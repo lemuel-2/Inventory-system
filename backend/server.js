@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import cors from "cors";
 
 import { ApiRoutes } from "./src/routes/api.route.js";
 import { ErrorMiddleware } from "./src/middleware/error.middleware.js";
@@ -16,6 +17,10 @@ class Server {
     }
 
     configureMiddleware() {
+        this.app.use(
+            cors({ origin: "http://localhost:5173" })
+        )
+
         this.app.use(express.json({ limit: "1mb" }));
     }
 
