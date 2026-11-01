@@ -1,30 +1,39 @@
+import { useState, useEffect } from "react";
+import api from "../services/api.js";
+
 function Inventory() {
-    const inventory = [
-    {
-      id: 1,
-      name: "Creamy White Coffee",
-      sku: "COF-001",
-      stock: 25,
-      reorderLevel: 10,
-      unit: "piece",
-    },
-    {
-      id: 2,
-      name: "Roasted Chicken",
-      sku: "FOO-001",
-      stock: 5,
-      reorderLevel: 10,
-      unit: "piece",
-    },
-    {
-      id: 3,
-      name: "Banana Chips",
-      sku: "SNK-001",
-      stock: 0,
-      reorderLevel: 5,
-      unit: "pack",
-    },
-  ];
+    const [inventory, setInventory] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        async function LoadInventory() {
+            try {
+                const products = await api.get("/products")
+                const stockRecord = await Promise.all(
+                    products.map(async (product) => {
+                        const stock = await api.get(
+                            `/inventory/products/${product.id}/stock`
+                        );
+
+                        return {
+                            ...product,
+                            ...stock
+                        }
+                    })
+                )
+            setInventory(stockRecord)
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+        LoadInventory();
+    }, []);
+
+    if (loading) return <p>Loading inventory</p>
+    if (error) return <p className="error-message">Error: {error}</p>
 
   return (
     <div className="inventory-page">
@@ -44,33 +53,36 @@ function Inventory() {
                         <th>Current Stock</th>
                         <th>Reorder Level</th>
                         <th>Stock Status</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {inventory.map((item) => (
+                    {inventory.length === 0 ? (
+                        <tr>
+                            <td colSpan="5">No inventory record found.</td>
+                        </tr>
+                    ) : (
+                    inventory.map((item) => {
+                        const stock = item.stock_quantity ?? 0;
+                        const reorderLevel = item.reorder_level ?? 0;
+
+                        let status = "In stock";
+
+                        if (stock === 0) {
+                            status = "Out of stock";
+                        } else if (stock <= reorderLevel) {
+                            status = "Low stock";
+                        }
+
+                        return (
                         <tr key={item.id}>
                             <td>{item.name}</td>
                             <td>{item.sku}</td>
-                            <td>
-                                {item.stock} {item.unit}
-                            </td>
-                            <td>{item.reorderLevel}</td>
-                            <td>
-                                {item.stock === 0 
-                                ? "Out of stock" 
-                                : item.stock <= item.reorderLevel
-                                ? "Low Stock"
-                                : "In Stock"
-                                }
-                            </td>
-                            <td>
-                                <button>Stock In</button>
-                                <button>Stock Out</button>
-                            </td>
+                            <td>{stock}</td>
+                            <td>{reorderLevel}</td>
+                            <td>{status}</td>
                         </tr>
-                    ))}
+                    )}))}
                 </tbody>
             </table>
         </div>
