@@ -502,3 +502,133 @@ button {
     padding: 12px;
   }
 }
+
+
+/* Add Product form */
+.product-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  background: white;
+  padding: 25px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.05);
+}
+
+.product-form h2,
+.product-form .error-message {
+  grid-column: 1 / -1;
+}
+
+.product-form h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.product-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.product-form input {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+}
+
+.product-form input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+.product-form button {
+  justify-self: start;
+}
+
+.error-message {
+  color: #b91c1c;
+  background: #fee2e2;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.success-message {
+  color: #166534;
+  background: #dcfce7;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .product-form {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .product-form button {
+    width: 100%;
+  }
+}
+
+/* Add Category form */
+.category-form {
+  display: grid;
+  gap: 18px;
+  background: white;
+  padding: 25px;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.05);
+}
+
+.category-form h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.category-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.category-form input,
+.category-form textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+  resize: vertical;
+}
+
+.category-form input:focus,
+.category-form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+.category-form button {
+  justify-self: start;
+}
+
+@media (max-width: 600px) {
+  .category-form {
+    padding: 18px;
+  }
+
+  .category-form button {
+    width: 100%;
+  }
+}
