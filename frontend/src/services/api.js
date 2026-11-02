@@ -3,15 +3,36 @@ class ApiClient {
         this.baseURL = baseURL;
     }
 
-    async get(path) {
-        const response = await fetch(`${this.baseURL}${path}`)
-        const result = await response.json()
-        if(!response.ok) throw new Error(result.error?.message || "Something went wrong");
-        
+    async request(path, option = {}) {
+        const response = await fetch(`${this.baseURL}${path}`, {
+            ...option, headers: {
+                "Content-Type": "application/json",
+                ...option.headers,
+            }
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) throw new Error(
+            result.error?.message || "Something went wrong"
+        );
+
         return result.data;
+
+    }
+
+    async get(path) {
+        return this.request(path)
+    }
+
+    async post(path, data) {
+        return this.request(path, {
+            method: "POST",
+            body: JSON.stringify(data)
+        })
     }
 }
 
 const api = new ApiClient("http://localhost:3000/api");
 
-export default api
+export default api;
