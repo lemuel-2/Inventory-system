@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import api from "../services/api.js";
+
 function MovementHistory() {
     const [movements, setMovements] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -10,11 +11,10 @@ function MovementHistory() {
             try {
                 const products = await api.get("/products");
 
-                const movementsRecords = await Promise.all(
+                const movementRecords = await Promise.all(
                     products.map(async (product) => {
-                        const productMovement = await api.get(
-                            `/inventory/products/${product.id}/movements`
-                        );
+                        const productMovementURL = `/inventory/products/${product.id}/movements`;
+                        const productMovement = await api.get(productMovementURL);
 
                         return productMovement.map((movement) => ({
                             ...movement,
@@ -23,7 +23,7 @@ function MovementHistory() {
                     })
                 );
 
-                const allMovements = movementsRecords.flat()
+                const allMovements = movementRecords.flat()
 
                 allMovements.sort((a, b) => {
                     return new Date(b.created_at) - new Date(a.created_at);
@@ -79,8 +79,14 @@ function MovementHistory() {
                                     <tr key={movement.id}>
                                         <td>{movement.id}</td>
                                         <td>{movement.product_name}</td>
-                                        <td>{movement.movement_type}</td>
                                         <td>
+                                            <span className={`movement-type ${String(movement.movement_type)}
+                                                .toLowerCase().replace(/\s+/&, "-")`}>
+                                            {movement.movement_type}
+                                            </span>
+                                        </td>
+                                        <td className={quantity > 0 ? "quantity-in" 
+                                                     : quantity < 0 ? "quantity-out" : ""}>
                                             {quantity > 0 ? "+" : ""}
                                             {quantity}
                                         </td>
@@ -88,7 +94,7 @@ function MovementHistory() {
                                         <td>
                                             {
                                             movement.created_at 
-                                            ? new Date(movement.created_at).toLocaleDateString() 
+                                            ? new Date(movement.created_at).toLocaleString() 
                                             : "-"
                                             }
                                         </td>
