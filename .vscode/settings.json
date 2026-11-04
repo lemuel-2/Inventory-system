@@ -8,8 +8,8 @@
   "editor.renderLineHighlight": "none",
   "editor.overviewRulerBorder": false,
   "editor.hideCursorInOverviewRuler": true,
-  "workbench.activityBar.location": "hidden",
-  "workbench.statusBar.visible": false,
+  "workbench.activityBar.location": "default",
+  "workbench.statusBar.visible": true,
   "workbench.startupEditor": "none",
   "window.menuBarVisibility": "toggle",
   "window.commandCenter": false
