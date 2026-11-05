@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import { Link } from "react-router-dom";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -14,23 +15,19 @@ function Products() {
   const [error, setError] = useState("");
   const [formError, setFormError] = useState("");
 
-  async function loadProducts() {
-    try {
-      setError("");
-
-      const data = await api.get("/products");
-      setProducts(data);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    // ESLint error: react-hooks/set-state-in-effect.
-    // loadProducts() calls setState (setError/setProducts/setLoading) synchronously
-    // in the effect body, which can trigger cascading renders.
+    async function loadProducts() {
+      try {
+        const data = await api.get("/products");
+        setError("");
+        setProducts(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
     loadProducts();
   }, []);
 
@@ -56,7 +53,7 @@ function Products() {
     }
 
     if (!Number.isFinite(price) || price < 0) {
-      setFormError("Price must be a valid non-negative integer.");
+      setFormError("Price must be a valid non-negative number.");
       return;
     }
 
@@ -78,12 +75,11 @@ function Products() {
     try {
       setSaving(true);
 
-      await api.post("/products", productData);
+      const created = await api.post("/products", productData);
 
       form.reset();
-      setSuccess("Products created successfully");
-
-      await loadProducts();
+      setSuccess("Product created successfully");
+      setProducts((prev) => [...prev, created]);
     } catch (error) {
       setFormError(error.message);
     } finally {
@@ -105,7 +101,11 @@ function Products() {
     const price = Number(formData.get("price"));
     const reorderLevel = Number(formData.get("reorder_level"));
     const unit = formData.get("unit").trim();
-    const categoryValue = Number(formData.get("category_id"));
+    const categoryInput = formData.get("category_id");
+    const categoryValue =
+      categoryInput === null || categoryInput.trim() === ""
+        ? null
+        : Number(categoryInput);
 
     if (!name || !sku || !unit) {
       setFormError("Name, sku, unit are required");
@@ -113,7 +113,7 @@ function Products() {
     }
 
     if (!Number.isFinite(price) || price < 0) {
-      setFormError("Price must be a non-negative integer");
+      setFormError("Price must be a non-negative number");
       return;
     }
 
@@ -123,8 +123,8 @@ function Products() {
     }
 
     if (
-      !Number.isInteger(Number(categoryValue)) ||
-      Number(categoryValue) <= 0
+      categoryValue !== null &&
+      (!Number.isInteger(categoryValue) || categoryValue <= 0)
     ) {
       setFormError("Category ID must be a positive integer");
       return;
@@ -136,18 +136,19 @@ function Products() {
       price_cents: Math.round(price * 100),
       reorder_level: reorderLevel,
       unit,
-      category_id: categoryValue ? categoryValue : null,
+      category_id: categoryValue,
     };
 
     try {
       setUpdating(true);
 
-      await api.patch(`/products/${editingProduct.id}`, productData)
+      const updated = await api.patch(`/products/${editingProduct.id}`, productData);
 
-      setEditingProduct(null)
-      setSuccess("Product Updated successfully");
-
-      await loadProducts();
+      setEditingProduct(null);
+      setSuccess("Product updated successfully");
+      setProducts((prev) =>
+        prev.map((product) => (product.id === updated.id ? updated : product)),
+      );
     } catch (error) {
       setFormError(error.message);
     } finally {
@@ -180,6 +181,7 @@ function Products() {
           className="add-products-btn"
           onClick={() => {
             setShowForm(!showForm);
+            setEditingProduct(null);
             setFormError("");
             setSuccess("");
           }}
@@ -330,7 +332,6 @@ function Products() {
               min="1"
               step="1"
               defaultValue={editingProduct.category_id ?? ""}
-              required
             />
           </label>
 
@@ -385,7 +386,7 @@ function Products() {
           </thead>
 
           <tbody>
-            {products.length === 0 ? (
+            {filteredProducts.length === 0 ? (
               <tr>
                 <td colSpan="8">
                   {searchTerm
@@ -396,25 +397,26 @@ function Products() {
             ) : (
               filteredProducts.map((product) => (
                 <tr key={product.id}>
-                  <th>{product.id}</th>
-                  <th>{product.name}</th>
-                  <th>{product.sku}</th>
-                  <th>{product.category_name || "Uncategorized"}</th>
-                  <th>{(product.price_cents / 100).toFixed(2)}</th>
-                  <th>{product.stock_quantity}</th>
-                  <th>{product.is_active ? "Active" : "Inactive"}</th>
-                  <th>
+                  <td>{product.id}</td>
+                  <td><Link to={`/products/${product.id}`}>{product.name}</Link></td>
+                  <td>{product.sku}</td>
+                  <td>{product.category_name || "Uncategorized"}</td>
+                  <td>{(product.price_cents / 100).toFixed(2)}</td>
+                  <td>{product.stock_quantity}</td>
+                  <td>{product.is_active ? "Active" : "Inactive"}</td>
+                  <td>
                     <button
                       type="button"
                       onClick={() => {
                         setEditingProduct(product);
+                        setShowForm(false);
                         setFormError("");
                         setSuccess("");
                       }}
                     >
                       Edit
                     </button>
-                  </th>
+                  </td>
                 </tr>
               ))
             )}

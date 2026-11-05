@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import api from "../services/api";
-import Products from "./Products";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -16,34 +15,36 @@ function ProductDetails() {
         setLoading(true);
         setError("");
 
-        const response = await api.get(`/product/${id}`);
-        setProduct(response.data);
+        const data = await api.get(`/products/${id}`);
+        setProduct(data);
       } catch (error) {
-        setError(
-          error.response?.date?.message || "Unable to load product details",
-        );
+        setError(error.message || "Unable to load product details");
       } finally {
         setLoading(false);
       }
     }
 
     loadProducts();
-  }, []);
+  }, [id]);
 
   if (loading) return <p>Loading products details</p>;
+
   if (error) {
-    <section>
-      <p>{error}</p>
-      <link to="/products">Back to products</link>
-    </section>;
+    return (
+      <section>
+        <p>{error}</p>
+        <Link to="/products">Back to products</Link>
+      </section>
+    );
   }
 
   if (!product) {
-    return;
-    <section>
-      <p>Product not found.</p>
-      <link to="/products">Back to products</link>
-    </section>;
+    return (
+      <section>
+        <p>Product not found.</p>
+        <Link to="/products">Back to products</Link>
+      </section>
+    );
   }
 
   return (
@@ -54,7 +55,7 @@ function ProductDetails() {
           <p>Product ID: {product.id}</p>
         </div>
 
-        <link to="/products">Back to products</link>
+        <Link to="/products">Back to products</Link>
       </div>
 
       <div className="product-details-card">
@@ -84,7 +85,7 @@ function ProductDetails() {
 
         <p>
           <strong>Status:</strong>
-          {product.is_active ? "Active" : "false"}
+          {product.is_active ? "Active" : "Inactive"}
         </p>
       </div>
     </section>
