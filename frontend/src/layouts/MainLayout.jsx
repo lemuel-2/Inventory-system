@@ -19,7 +19,7 @@ function MainLayout() {
         <div className="main-layout">
             <SideBar 
                 isOpen={isSidebarOpen}
-                isClose={closeSidebar}
+                onClose={closeSidebar}
             />
 
             <div className="main-content">

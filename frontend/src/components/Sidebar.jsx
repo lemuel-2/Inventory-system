@@ -13,19 +13,19 @@ function SideBar({ isOpen, onClose }) {
         <>
         {isOpen && (
             <button
-            className="Sidebar-overlay"
-            onClick={onclose}
+            className="sidebar-overlay"
+            onClick={onClose}
             aria-label="Close navigation menu"
             />
-        )};
+        )}
 
-        <aside className={`sidebar ${isOpen} ? "sidebar-open" : ""`}>
+        <aside className={`sidebar${isOpen ? " sidebar-open" : ""}`}>
             <div className="sidebar-heading">
                 <h2 className="sidebar-title">Inventory System</h2>
 
                 <button 
                     className="sidebar-close"
-                    onClick={onclose}
+                    onClick={onClose}
                     aria-label="Close navigation menu"
                     >
                         x

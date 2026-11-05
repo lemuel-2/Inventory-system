@@ -74,8 +74,8 @@ function Dashboard() {
 
   // total quantity of all active inventory
   const totalUnits = activeProducts.reduce((total, product) => {
-    return (total + Number(product.stock_quantity ?? 0), 0);
-  });
+    return total + Number(product.stock_quantity ?? 0);
+  }, 0);
 
   // calculate inventory value using prices stored in cents
   const totalStockValue = activeProducts.reduce((total, product) => {
@@ -168,7 +168,7 @@ function Dashboard() {
                 {lowStockProducts.map((product) => (
                   <tr key={product.id}>
                     <td>{product.name}</td>
-                    <td>{product.quantity}</td>
+                    <td>{product.stock_quantity}</td>
                     <td>{product.reorder_level}</td>
                   </tr>
                 ))}
@@ -206,7 +206,7 @@ function Dashboard() {
                     <td>{formatDate(movement.created_at)}</td>
                     <td>{movement.product_name}</td>
                     <td>{movement.movement_type}</td>
-                    <td>{movement.quantity}</td>
+                    <td>{movement.quantity_change ?? movement.quantity}</td>
                     <td>{movement.reason || "—"}</td>
                   </tr>
                 ))}
