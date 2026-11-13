@@ -25,8 +25,8 @@ function Header({ onMenuClick }) {
                 </button>
             </div>
 
-            <h2>{currentPage}</h2>
-            <p>Inventory Management System</p>
+            {/* <h2>{currentPage}</h2> */}
+            {/* <p>Inventory Management System</p> */}
         </header>
     )
 }
