@@ -38,6 +38,17 @@ function Inventory() {
     LoadInventory();
   }, []);
 
+  const lowStockItems = inventory.filter((item) => {
+    const stock = item.stock_quantity ?? 0;
+    const reorderLevel = item.reorder_level ?? 0;
+
+    return stock > 0 && stock <= reorderLevel;
+  });
+
+  const outOfStockItems = inventory.filter((item) => {
+    return (item.stock_quantity ?? 0) === 0;
+  });
+
   function openStockForm(product, action) {
     setSelectedProduct(product);
     setStockAction(action);
@@ -102,6 +113,43 @@ function Inventory() {
           <p>Monitor and manage product stock</p>
         </div>
       </div>
+
+      <div className="stock-alerts">
+  <h2>Stock Alerts</h2>
+
+  <p>
+    Low-stock products: <strong>{lowStockItems.length}</strong>
+  </p>
+
+  <p>
+    Out-of-stock products: <strong>{outOfStockItems.length}</strong>
+  </p>
+
+  {lowStockItems.length > 0 && (
+    <div>
+      <h3>Products that need restocking</h3>
+
+      {lowStockItems.map((item) => (
+        <p key={item.id}>
+          {item.name} — Current Stock: {item.stock_quantity},
+          Reorder Level: {item.reorder_level}
+        </p>
+      ))}
+    </div>
+  )}
+
+  {outOfStockItems.length > 0 && (
+    <div>
+      <h3>Products out of stock</h3>
+
+      {outOfStockItems.map((item) => (
+        <p key={item.id}>
+          {item.name} — Out of stock
+        </p>
+      ))}
+    </div>
+  )}
+</div>
 
       {success && <p className="success-message">{success}</p>}
 

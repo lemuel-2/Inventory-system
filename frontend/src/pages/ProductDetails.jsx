@@ -55,7 +55,12 @@ function ProductDetails() {
           <p>Product ID: {product.id}</p>
         </div>
 
-        <Link to="/products">Back to products</Link>
+        <div className="product-details-actions">
+          <Link to={`/products/${product.id}/edit`}>
+            Edit Product
+          </Link>
+          <Link to="/products">Back to products</Link>
+        </div>
       </div>
 
       <div className="product-details-card">

@@ -6,6 +6,7 @@ import Categories from "./pages/Categories.jsx";
 import Inventory from "./pages/Inventory.jsx";
 import MovementHistory from "./pages/MovementHistory.jsx";
 import ProductDetails from "./pages/ProductDetails.jsx"; 
+import EditProduct from "./pages/EditProduct.jsx"
 
 import "./App.css";
 import MainLayout from "./layouts/MainLayout";
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/products" element={<Products />} />
                     <Route path="/products/:id" element={<ProductDetails />} />
+                    <Route path="/products/:id/edit" element={<EditProduct />} />
                     <Route path="/categories" element={<Categories />} />
                     <Route path="/inventory" element={<Inventory />} />
                     <Route path="/movements" element={<MovementHistory />} />
